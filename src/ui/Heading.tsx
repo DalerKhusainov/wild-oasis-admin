@@ -1,16 +1,11 @@
 import styled, { css } from "styled-components";
 
-// interface HeadingProps {
-//   $type?: "h1" | "h2" | "h3";
-// }
-
 const Heading = styled.h1`
   ${(props) =>
     props.as === "h1" &&
     css`
       font-size: 3rem;
       font-weight: 600;
-      color: red;
     `}
 
   ${(props) =>
@@ -18,7 +13,6 @@ const Heading = styled.h1`
     css`
       font-size: 2rem;
       font-weight: 600;
-      color: green;
     `} 
 
    ${(props) =>
@@ -26,12 +20,7 @@ const Heading = styled.h1`
     css`
       font-size: 2rem;
       font-weight: 500;
-      color: yellow;
     `}
 `;
-
-// Heading.defaultProps = {
-//   $type: "h1",
-// };
 
 export default Heading;
