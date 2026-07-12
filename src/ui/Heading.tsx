@@ -1,6 +1,37 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-const H1 = styled.h1`
-  font-weight: 600;
-  color: var(--color-yellow-700);
+// interface HeadingProps {
+//   $type?: "h1" | "h2" | "h3";
+// }
+
+const Heading = styled.h1`
+  ${(props) =>
+    props.as === "h1" &&
+    css`
+      font-size: 3rem;
+      font-weight: 600;
+      color: red;
+    `}
+
+  ${(props) =>
+    props.as === "h2" &&
+    css`
+      font-size: 2rem;
+      font-weight: 600;
+      color: green;
+    `} 
+
+   ${(props) =>
+    props.as === "h3" &&
+    css`
+      font-size: 2rem;
+      font-weight: 500;
+      color: yellow;
+    `}
 `;
+
+// Heading.defaultProps = {
+//   $type: "h1",
+// };
+
+export default Heading;
