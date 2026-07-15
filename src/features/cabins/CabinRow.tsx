@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { formatCurrency } from "../../utils/helpers";
+import useDeleteCabin from "./useDeleteCabin";
 
 const TableRow = styled.div`
   display: grid;
@@ -38,3 +40,24 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
+
+function CabinRow({ cabin }: { cabin: any }) {
+  const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
+
+  const { mutate: deleteCabin, isPending: isDeleting } = useDeleteCabin();
+
+  return (
+    <TableRow role="row">
+      <Img src={image} />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity} guests</div>
+      <Price>{formatCurrency(regularPrice, "USD")}</Price>
+      <Discount>{formatCurrency(discount, "USD")}</Discount>
+      <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
+        {isDeleting ? "Deleting..." : "Delete"}
+      </button>
+    </TableRow>
+  );
+}
+
+export default CabinRow;

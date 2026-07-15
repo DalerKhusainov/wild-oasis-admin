@@ -12,11 +12,14 @@ import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 
 import AppLayout from "./ui/AppLayout";
+import Toaster from "./ui/Toaster";
 
 function App() {
   return (
     <>
       <GlobalStyles />
+      <Toaster />
+
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
