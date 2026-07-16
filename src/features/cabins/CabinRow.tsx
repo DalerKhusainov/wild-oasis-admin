@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import useDeleteCabin from "./useDeleteCabin";
+import type { CabinType } from "../../types/CabinType";
 
 const TableRow = styled.div`
   display: grid;
@@ -41,9 +42,8 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-function CabinRow({ cabin }: { cabin: any }) {
+function CabinRow({ cabin }: { cabin: CabinType }) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
-
   const { mutate: deleteCabin, isPending: isDeleting } = useDeleteCabin();
 
   return (

@@ -1,6 +1,7 @@
 import { supabase } from "./supabae-client";
+import type { CabinsType, CreateCabinType } from "../types/CabinType";
 
-export async function getCabins() {
+export async function getCabins(): Promise<CabinsType> {
   const { data, error } = await supabase.from("cabins").select();
 
   if (error) {
@@ -11,7 +12,18 @@ export async function getCabins() {
   return data;
 }
 
-export async function deleteCabin(id: string) {
+export async function createCabin(newCabin: CreateCabinType) {
+  const { data, error } = await supabase.from("cabins").insert([newCabin]);
+
+  if (error) {
+    console.log(error);
+    throw new Error("Cabin could not be created");
+  }
+
+  return data;
+}
+
+export async function deleteCabin(id: number) {
   const { data, error } = await supabase.from("cabins").delete().eq("id", id);
 
   if (error) {
