@@ -48,11 +48,14 @@ function CreateCabinForm() {
   const { mutate: createCabin, isPending: isCreatingCabin } = useCreateCabin();
 
   const onSubmit: SubmitHandler<CreateCabinType> = (formData) => {
-    createCabin(formData, {
-      onSuccess: () => {
-        reset();
-      },
-    });
+    createCabin(
+      { ...formData, image: formData.image[0] },
+      {
+        onSuccess: () => {
+          reset();
+        },
+      }
+    );
   };
 
   // const onError = (error) => console.log(error);
@@ -110,7 +113,6 @@ function CreateCabinForm() {
 
       <FormRow label="Description" error={errors?.description?.message}>
         <Textarea
-          type="number"
           id="description"
           defaultValue=""
           disabled={isCreatingCabin}

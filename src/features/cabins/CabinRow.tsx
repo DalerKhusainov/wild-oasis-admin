@@ -1,7 +1,9 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import useDeleteCabin from "./useDeleteCabin";
 import type { CabinType } from "../../types/CabinType";
+import CreateCabinForm from "./CreateCabinForm";
 
 const TableRow = styled.div`
   display: grid;
@@ -43,20 +45,28 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }: { cabin: CabinType }) {
+  const [showEditForm, setShowEditForm] = useState(false);
+
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
   const { mutate: deleteCabin, isPending: isDeleting } = useDeleteCabin();
 
   return (
-    <TableRow role="row">
-      <Img src={image} />
-      <Cabin>{name}</Cabin>
-      <div>Fits up to {maxCapacity} guests</div>
-      <Price>{formatCurrency(regularPrice, "USD")}</Price>
-      <Discount>{formatCurrency(discount, "USD")}</Discount>
-      <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
-        {isDeleting ? "Deleting..." : "Delete"}
-      </button>
-    </TableRow>
+    <>
+      <TableRow role="row">
+        <Img src={image} />
+        <Cabin>{name}</Cabin>
+        <div>Fits up to {maxCapacity} guests</div>
+        <Price>{formatCurrency(regularPrice, "USD")}</Price>
+        <Discount>{formatCurrency(discount, "USD")}</Discount>
+        <div>
+          <button onClick={() => setShowEditForm((show) => !show)}>Edit</button>
+          <button onClick={() => deleteCabin(id)} disabled={isDeleting}>
+            {isDeleting ? "Deleting..." : "Delete"}
+          </button>
+        </div>
+      </TableRow>
+      {showEditForm && <CreateCabinForm />}
+    </>
   );
 }
 
