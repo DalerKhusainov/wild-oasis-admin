@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import useDeleteCabin from "./useDeleteCabin";
 import type { CabinType } from "../../types/CabinType";
-import CreateCabinForm from "./CreateCabinForm";
+import UpdateCabinForm from "./UpdateCabinForm";
 
 const TableRow = styled.div`
   display: grid;
@@ -65,7 +65,7 @@ function CabinRow({ cabin }: { cabin: CabinType }) {
           </button>
         </div>
       </TableRow>
-      {showEditForm && <CreateCabinForm />}
+      {showEditForm && <UpdateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }

@@ -1,11 +1,14 @@
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useState, type ChangeEvent } from "react";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import type { UdateCabinType, CabinType } from "../../types/CabinType";
+import type { CabinType } from "../../types/CabinType";
 
 import FileInput from "../../ui/FileInput";
 import Input from "../../ui/Input";
 import Textarea from "../../ui/Textarea";
 import Button from "../../ui/Button";
+
+import { useUpdateCabin } from "./useUpdateCabin";
 
 const Container = styled.div`
   display: flex;
@@ -58,6 +61,8 @@ interface UpdateCabinFormProps {
 }
 
 function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const { mutate: updateCabin, isPending: isUpdating } = useUpdateCabin();
   const { id: editId, ...editValues } = cabinToEdit;
 
   const {
@@ -66,21 +71,36 @@ function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
     reset,
     getValues,
     formState: { errors },
-  } = useForm<UdateCabinType>({
+  } = useForm({
     defaultValues: {
       name: editValues.name,
       maxCapacity: editValues.maxCapacity,
       regularPrice: editValues.regularPrice,
       discount: editValues.discount,
       description: editValues.description,
-      image: editValues.image,
     },
   });
+
+  const onSubmit = (formData: any) => {
+    updateCabin(
+      { id: editId, updatedCabin: formData, newImage: imageFile },
+      {
+        onSuccess: () => {
+          reset();
+        },
+      }
+    );
+  };
+
+  function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) setImageFile(file);
+  }
 
   return (
     <Container>
       <H3>Edit cabin {editValues.name}</H3>
-      <StyledUpdateCabinForm>
+      <StyledUpdateCabinForm onSubmit={handleSubmit(onSubmit)}>
         <FormRow>
           <Label htmlFor="name">Cabin name</Label>
           <Input
@@ -88,7 +108,7 @@ function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
             id="name"
             {...register("name", { required: "This field is required" })}
           />
-          {errors?.name?.message && <Error>{errors?.name?.message}</Error>}
+          {errors?.name && <Error>{errors?.name?.message}</Error>}
         </FormRow>
 
         <FormRow>
@@ -101,9 +121,7 @@ function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
               min: { value: 1, message: "Capacity should be at least 1" },
             })}
           />
-          {errors?.maxCapacity?.message && (
-            <Error>{errors?.maxCapacity?.message}</Error>
-          )}
+          {errors?.maxCapacity && <Error>{errors?.maxCapacity?.message}</Error>}
         </FormRow>
 
         <FormRow>
@@ -116,7 +134,7 @@ function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
               min: { value: 1, message: "Price should be at least 1" },
             })}
           />
-          {errors?.regularPrice?.message && (
+          {errors?.regularPrice && (
             <Error>{errors?.regularPrice?.message}</Error>
           )}
         </FormRow>
@@ -133,9 +151,7 @@ function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
                 "Discount should be less than regular price",
             })}
           />
-          {errors?.discount?.message && (
-            <Error>{errors?.discount?.message}</Error>
-          )}
+          {errors?.discount && <Error>{errors?.discount?.message}</Error>}
         </FormRow>
 
         <FormRow>
@@ -144,19 +160,12 @@ function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
             id="description"
             {...register("description", { required: "This field is required" })}
           />
-          {errors?.description?.message && (
-            <Error>{errors?.description?.message}</Error>
-          )}
+          {errors?.description && <Error>{errors?.description?.message}</Error>}
         </FormRow>
 
         <FormRow>
           <Label htmlFor="image">Description</Label>
-          <FileInput
-            id="image"
-            accept="image/*"
-            {...register("image", { required: "This field is required" })}
-          />
-          {errors?.image?.message && <Error>{errors?.image?.message}</Error>}
+          <FileInput id="image" accept="image/*" onChange={handleImageChange} />
         </FormRow>
 
         <ButtonRow>
@@ -164,7 +173,7 @@ function UpdateCabinForm({ cabinToEdit }: UpdateCabinFormProps) {
             Cancel
           </Button>
           <Button $variation="primary" $size="medium">
-            Save changes
+            {isUpdating ? "Saving changes..." : "Save changes"}
           </Button>
         </ButtonRow>
       </StyledUpdateCabinForm>
