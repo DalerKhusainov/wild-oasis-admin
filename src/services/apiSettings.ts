@@ -1,6 +1,7 @@
-import supabase from "./supabase";
+import { supabase } from "./supabae-client";
+import type { SettingsType, SettingType } from "../types/SettingType";
 
-export async function getSettings() {
+export async function getSettings(): Promise<SettingsType> {
   const { data, error } = await supabase.from("settings").select("*").single();
 
   if (error) {
@@ -11,7 +12,7 @@ export async function getSettings() {
 }
 
 // We expect a newSetting object that looks like {setting: newValue}
-export async function updateSetting(newSetting) {
+export async function updateSetting(newSetting: Partial<SettingType>) {
   const { data, error } = await supabase
     .from("settings")
     .update(newSetting)
@@ -23,5 +24,6 @@ export async function updateSetting(newSetting) {
     console.error(error);
     throw new Error("Settings could not be updated");
   }
+
   return data;
 }

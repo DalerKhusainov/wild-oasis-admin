@@ -17,7 +17,7 @@ export type CreateCabinType = {
   regularPrice: number;
   discount: number;
   description: string;
-  image: FileList | File;
+  image: FileList | File | string;
 };
 
 export type UdateCabinType = {
